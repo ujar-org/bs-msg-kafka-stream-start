@@ -1,0 +1,111 @@
+build :
+  description : '@project.description@'
+  relative-path : ${SWAGGER_UI_RELATIVE_PATH:}
+  version : '@project.version@'
+
+git :
+  commit : '@git.commit.id@'
+  build_time : '@git.build.time@'
+
+info :
+  app :
+    name : '@project.name@'
+    description : '@project.description@'
+    version : '@project.version@'
+    git_commit : ${git.commit}
+    build_time : ${git.build_time}
+
+spring :
+  application :
+    name : bs-msg-kafka-stream-start
+  jackson :
+    default-property-inclusion : NON_NULL
+  lifecycle :
+    timeout-per-shutdown-phase : ${TIMEOUT_PER_SHUTDOWN:20s}
+  kafka :
+    producer :
+      bootstrap-servers : ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+      value-serializer : org.apache.kafka.common.serialization.StringSerializer
+      properties :
+        basic.auth.credentials.source : SASL_INHERIT
+        security.protocol : ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
+        sasl.mechanism : SCRAM-SHA-512
+        sasl.jaas.config : "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"${KAFKA_USERNAME}\" password=\"${KAFKA_PASSWORD}\";"
+        spring.json.add.type.headers : false
+    consumer :
+      bootstrap-servers : ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+      value-deserializer : org.apache.kafka.common.serialization.StringDeserializer
+      group-id : test-group
+      auto-offset-reset : earliest
+      properties :
+        isolation.level : read_committed
+        spring.json.trusted.packages : '*'
+    admin :
+      properties :
+        bootstrap.servers : ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+        security.protocol : ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
+        sasl.mechanism : SCRAM-SHA-512
+        sasl.jaas.config : "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"${KAFKA_USERNAME}\" password=\"${KAFKA_PASSWORD}\";"
+    streams :
+      application-id : bsmsgkafkastreamstart
+      properties :
+        "default.key.serde" : 'org.apache.kafka.common.serialization.Serdes$StringSerde'
+        "default.value.serde" : 'org.apache.kafka.common.serialization.Serdes$StringSerde'
+        "default.deserialization.exception.handler" : "org.springframework.kafka.streams.RecoveringDeserializationExceptionHandler"
+  jmx :
+    enabled : true
+
+logging :
+  level :
+    ROOT : ${LOGGING_LEVEL_ROOT:INFO}
+
+management :
+  health :
+    livenessstate :
+      enabled : true
+    readinessstate :
+      enabled : true
+  info :
+    env :
+      enabled : true
+  server :
+    add-application-context-header : true
+  endpoints :
+    enabled-by-default : false
+    web :
+      exposure :
+        include : health, info
+  endpoint :
+    health :
+      enabled : true
+      show-details : always
+      probes :
+        enabled : true
+    info :
+      enabled : true
+
+server :
+  port : ${SERVER_PORT:8080}
+  shutdown : graceful
+
+ujar :
+  kafka :
+    create-topics-on-startup : ${KAFKA_CREATE_TOPICS_ON_STARTUP:true}
+    topics :
+      for-input :
+        name : ${KAFKA_TOPIC_FOR_INPUT:input-topic}
+        partitions : ${KAFKA_TOPIC_PARTITIONS_FOR_INPUT:1}
+        retention : ${KAFKA_TOPIC_RETENTION_FOR_INPUT:30m}
+      for-output :
+        name : ${KAFKA_TOPIC_FOR_OUTPUT:output-topic}
+        partitions : ${KAFKA_TOPIC_PARTITIONS_FOR_OUTPUT:1}
+        retention : ${KAFKA_TOPIC_RETENTION_FOR_OUTPUT:30m}
+    error-handling :
+      dead-letter :
+        retention : 1d
+        suffix : .DLT
+      backoff :
+        initial-interval : 500ms
+        max-interval : 2s
+        max-retries : 4
+        multiplier : 1.5

@@ -1,0 +1,190 @@
+kind : pipeline
+name : CI
+type : docker
+
+trigger :
+  event :
+    - push
+    - tag
+
+volumes :
+  - name : m2cache
+    host :
+      path : /app/.m2
+steps :
+
+  - name : build
+    image : docker-registry.c2a2.com/ujar/maven:3-openjdk-17-slim
+    pull : if-not-exists
+    volumes :
+      - name : m2cache
+        path : /root/.m2
+    environment :
+      KAFKA_BOOTSTRAP_SERVERS : kafka:9092
+      KAFKA_SCHEMA_REGISTRY_URL : http://schema-registry:8081
+      DEPLOYER_USERNAME :
+        from_secret : DEPLOYER_USERNAME
+      DEPLOYER_PASSWORD :
+        from_secret : DEPLOYER_PASSWORD
+      SONAR_HOST :
+        from_secret : SONAR_HOST
+      SONAR_TOKEN :
+        from_secret : SONAR_TOKEN
+    commands :
+      - mvn clean compile test-compile -P default -B  --file pom.xml -s ../maven-settings.xml -Ddeployer.username=$DEPLOYER_USERNAME -Ddeployer.password=$DEPLOYER_PASSWORD
+      - mvn pmd:check -P default -B --file pom.xml -s ../maven-settings.xml -Ddeployer.username=$DEPLOYER_USERNAME -Ddeployer.password=$DEPLOYER_PASSWORD
+      - mvn com.github.spotbugs:spotbugs-maven-plugin:4.7.3.0:check -P default -Dspotbugs.xmlOutput=true -Dspotbugs.failOnError=true -Dspotbugs.excludeFilterFile=../spotbugs-exclude.xml -Dspotbugs.includeTests=true  --file pom.xml -s ../maven-settings.xml -Ddeployer.username=$DEPLOYER_USERNAME -Ddeployer.password=$DEPLOYER_PASSWORD
+      - mvn org.jacoco:jacoco-maven-plugin:prepare-agent package org.jacoco:jacoco-maven-plugin:report sonar:sonar -P default -Dsonar.host.url=$SONAR_HOST -Dsonar.login=$SONAR_TOKEN -Dsonar.projectKey=ujar-org:bs-msg-kafka-stream-start -Dsonar.projectName=ujar-org:bs-msg-kafka-stream-start --batch-mode  --file pom.xml -s ../maven-settings.xml -Ddeployer.username=$DEPLOYER_USERNAME -Ddeployer.password=$DEPLOYER_PASSWORD
+    when :
+      event :
+        - push
+        - tag
+
+
+  - name : publish-snapshot-jar
+    depends_on :
+      - build
+    image : docker-registry.c2a2.com/ujar/maven:3-openjdk-17-slim
+    pull : if-not-exists
+    volumes :
+      - name : m2cache
+        path : /root/.m2
+    environment :
+      DEPLOYER_USERNAME :
+        from_secret : DEPLOYER_USERNAME
+      DEPLOYER_PASSWORD :
+        from_secret : DEPLOYER_PASSWORD
+    commands :
+      - mvn deploy -P default -DskipTests=true -Dcheckstyle.skip=true -s ../maven-settings.xml -Ddeployer.username=$DEPLOYER_USERNAME -Ddeployer.password=$DEPLOYER_PASSWORD -DaltDeploymentRepository=ujar-snapshots-repository::default::https://nexus.c2a2.com/repository/maven-snapshots
+    when :
+      branch :
+        include :
+          - feature/*
+          - develop
+
+  - name : publish-release-jar
+    depends_on :
+      - build
+    image : docker-registry.c2a2.com/ujar/maven:3-openjdk-17-slim
+    pull : if-not-exists
+    volumes :
+      - name : m2cache
+        path : /root/.m2
+    environment :
+      DEPLOYER_USERNAME :
+        from_secret : DEPLOYER_USERNAME
+      DEPLOYER_PASSWORD :
+        from_secret : DEPLOYER_PASSWORD
+    commands :
+      - mvn deploy -P default -DskipTests=true -Dcheckstyle.skip=true -s ../maven-settings.xml -Ddeployer.username=$DEPLOYER_USERNAME -Ddeployer.password=$DEPLOYER_PASSWORD -DaltDeploymentRepository=ujar-releases-repository::default::https://nexus.c2a2.com/repository/maven-releases
+    when :
+      ref :
+        - refs/tags/*
+
+  - name : build-container-snapshot-image
+    depends_on :
+      - publish-snapshot-jar
+    image : plugins/docker
+    settings :
+      dockerfile : .drone/c2a2/Dockerfile
+      context : ./
+      storage_driver : vfs
+      username :
+        from_secret : DOCKER_USERNAME
+      password :
+        from_secret : DOCKER_PASSWORD
+      repo : docker-registry.c2a2.com/ujar/bs-msg-kafka-stream-start
+      registry : docker-registry.c2a2.com
+      tags :
+        - latest
+    when :
+      branch :
+        include :
+          - feature/*
+          - develop
+
+  - name : build-container-release-image
+    depends_on :
+      - publish-release-jar
+    image : plugins/docker
+    settings :
+      dockerfile : .drone/c2a2/Dockerfile
+      context : ./
+      storage_driver : vfs
+      username :
+        from_secret : DOCKER_USERNAME
+      password :
+        from_secret : DOCKER_PASSWORD
+      repo : docker-registry.c2a2.com/ujar/bs-msg-kafka-stream-start
+      registry : docker-registry.c2a2.com
+      tags :
+        - ${DRONE_TAG}
+    when :
+      ref :
+        - refs/tags/*
+
+services :
+  - name : zookeeper
+    image : docker.io/bitnami/zookeeper:3.8
+    environment :
+      ZOOKEEPER_CLIENT_PORT : 2181
+      ZOOKEEPER_TICK_TIME : 2000
+      ALLOW_ANONYMOUS_LOGIN : yes
+
+  - name : kafka
+    image : docker.io/bitnami/kafka:3.4
+    environment :
+      KAFKA_BROKER_ID : 1
+      KAFKA_CFG_LISTENERS : PLAINTEXT://:9092,PLAINTEXT_KAFKA://:9091
+      KAFKA_CFG_ADVERTISED_LISTENERS : PLAINTEXT://kafka:9092,PLAINTEXT_KAFKA://kafka:9091
+      KAFKA_CFG_ZOOKEEPER_CONNECT : zookeeper:2181
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE : true
+      ALLOW_PLAINTEXT_LISTENER : yes
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP : PLAINTEXT:PLAINTEXT,PLAINTEXT_KAFKA:PLAINTEXT
+
+---
+
+kind : pipeline
+name : CreateReleaseManually
+type : docker
+trigger :
+  event :
+    - custom
+  branch :
+    - develop
+
+volumes :
+  - name : m2cache
+    host :
+      path : /app/.m2
+
+steps :
+  - name : create-release-tag
+    image : docker-registry.c2a2.com/ujar/maven:3-openjdk-17-slim
+    pull : if-not-exists
+    volumes :
+      - name : m2cache
+        path : /root/.m2
+    commands :
+      - echo Prepare new release tag ${TAG}
+      - mkdir ${TAG}
+      - rmdir ${TAG}
+      - export NEXT_SNAPSHOT=$(increment_version -m ${TAG})-SNAPSHOT
+      - git remote set-url --push origin ${DRONE_GIT_SSH_URL}
+      - git checkout -b v${TAG}
+      - mvn versions:set -DremoveSnapshot
+      - mvn versions:set -DnewVersion=${TAG}
+      - mvn versions:update-parent
+      - >-
+        git commit -a -m "feat: prepare new release $${TAG}"
+      - git tag ${TAG} && git push origin ${TAG}
+      - echo "✅ Release tag ${TAG} was created."
+      - sleep 10
+      - git tag -d ${TAG} && git checkout ${DRONE_COMMIT_BRANCH} && git branch -D v${TAG}
+      - mvn versions:set -DnewVersion=$${NEXT_SNAPSHOT}
+      - mvn versions:update-parent -DallowSnapshots=true
+      - >-
+        git commit -a -m "feat: create new $${NEXT_SNAPSHOT}"
+      - git push origin ${DRONE_COMMIT_BRANCH}
+      - echo "✅ Started $${NEXT_SNAPSHOT}."
+      - echo "🚀 Good job, new version ${TAG} was released successfully."

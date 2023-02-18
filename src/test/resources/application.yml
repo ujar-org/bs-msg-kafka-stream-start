@@ -1,0 +1,64 @@
+build :
+  description : '@project.description@'
+  relative-path : ''
+  version : '@project.version@'
+
+spring :
+  application :
+    name : bs-msg-kafka-stream-start
+  kafka :
+    producer :
+      bootstrap-servers : ${spring.embedded.kafka.brokers}
+      value-serializer : org.apache.kafka.common.serialization.StringSerializer
+      properties :
+        basic.auth.credentials.source : SASL_INHERIT
+        security.protocol : ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
+        sasl.mechanism : SCRAM-SHA-512
+        sasl.jaas.config : "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"${KAFKA_USERNAME}\" password=\"${KAFKA_PASSWORD}\";"
+        spring.json.add.type.headers : false
+    consumer :
+      bootstrap-servers : ${spring.embedded.kafka.brokers}
+      value-deserializer : org.apache.kafka.common.serialization.StringDeserializer
+      group-id : test-group
+      auto-offset-reset : earliest
+      properties :
+        isolation.level : read_committed
+        spring.json.trusted.packages : '*'
+    admin :
+      properties :
+        bootstrap.servers : ${spring.embedded.kafka.brokers}
+        security.protocol : ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
+        sasl.mechanism : SCRAM-SHA-512
+        sasl.jaas.config : "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"${KAFKA_USERNAME}\" password=\"${KAFKA_PASSWORD}\";"
+    streams :
+      application-id : test.bsmsgkafkastreamstart
+      properties :
+        "default.key.serde" : 'org.apache.kafka.common.serialization.Serdes$StringSerde'
+        "default.value.serde" : 'org.apache.kafka.common.serialization.Serdes$StringSerde'
+        "default.deserialization.exception.handler" : "org.springframework.kafka.streams.RecoveringDeserializationExceptionHandler"
+  jmx :
+    enabled : true
+
+ujar :
+  kafka :
+    create-topics-on-startup : true
+    topics :
+      for-input :
+        name : test-input-topic
+        partitions : 1
+        retention : 30m
+      for-output :
+        name : test-output-topic
+        partitions : 1
+        retention : 30m
+    error-handling :
+      dead-letter :
+        retention : 30s
+        suffix : .DLT
+      backoff :
+        initial-interval : 500ms
+        max-interval : 2s
+        max-retries : 4
+        multiplier : 1.5
+
+producer.enabled : false
