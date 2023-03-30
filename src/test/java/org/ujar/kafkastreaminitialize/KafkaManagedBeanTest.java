@@ -1,4 +1,4 @@
-package org.ujar.bs.msg.kafka.stream.start;
+package org.ujar.kafkastreaminitialize;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

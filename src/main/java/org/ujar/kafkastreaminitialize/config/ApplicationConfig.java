@@ -1,4 +1,4 @@
-package org.ujar.bs.msg.kafka.stream.start.config;
+package org.ujar.kafkastreaminitialize.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafkaStreams;

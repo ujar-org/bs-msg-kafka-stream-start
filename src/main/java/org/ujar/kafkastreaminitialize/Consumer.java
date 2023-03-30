@@ -1,4 +1,4 @@
-package org.ujar.bs.msg.kafka.stream.start;
+package org.ujar.kafkastreaminitialize;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;

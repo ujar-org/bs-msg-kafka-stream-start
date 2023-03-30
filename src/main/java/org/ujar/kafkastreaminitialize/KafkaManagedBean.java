@@ -1,11 +1,11 @@
-package org.ujar.bs.msg.kafka.stream.start;
+package org.ujar.kafkastreaminitialize;
 
 import org.springframework.jmx.export.annotation.ManagedAttribute;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.kafka.config.StreamsBuilderFactoryBean;
 import org.springframework.stereotype.Component;
 
-@ManagedResource(objectName = "org.ujar.bs.msg.kafka.streams.start:name=KafkaManagedBean")
+@ManagedResource(objectName = "org.ujar.kafka.streams.start:name=KafkaManagedBean")
 @Component
 public class KafkaManagedBean {
   private final StreamsBuilderFactoryBean streamsBuilderFactoryBean;
@@ -16,6 +16,7 @@ public class KafkaManagedBean {
 
   @ManagedAttribute(description = "Get the topology description")
   public String getTopologyDescription() {
-    return streamsBuilderFactoryBean.getTopology().describe().toString();
+    var topology = streamsBuilderFactoryBean.getTopology();
+    return (topology != null) ? topology.describe().toString() : "";
   }
 }
