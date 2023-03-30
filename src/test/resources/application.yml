@@ -1,21 +1,13 @@
-build :
-  description : '@project.description@'
-  relative-path : ''
-  version : '@project.version@'
-
 spring :
   application :
-    name : bs-msg-kafka-stream-start
+    name : quickstart-kafka-stream-initialize
   kafka :
     producer :
       bootstrap-servers : ${spring.embedded.kafka.brokers}
       value-serializer : org.apache.kafka.common.serialization.StringSerializer
       properties :
-        basic.auth.credentials.source : SASL_INHERIT
         security.protocol : ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
         sasl.mechanism : SCRAM-SHA-512
-        sasl.jaas.config : "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"${KAFKA_USERNAME}\" password=\"${KAFKA_PASSWORD}\";"
-        spring.json.add.type.headers : false
     consumer :
       bootstrap-servers : ${spring.embedded.kafka.brokers}
       value-deserializer : org.apache.kafka.common.serialization.StringDeserializer
@@ -29,9 +21,8 @@ spring :
         bootstrap.servers : ${spring.embedded.kafka.brokers}
         security.protocol : ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
         sasl.mechanism : SCRAM-SHA-512
-        sasl.jaas.config : "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"${KAFKA_USERNAME}\" password=\"${KAFKA_PASSWORD}\";"
     streams :
-      application-id : test.bsmsgkafkastreamstart
+      application-id : test.bsmsgkafkastreaminitialize
       properties :
         "default.key.serde" : 'org.apache.kafka.common.serialization.Serdes$StringSerde'
         "default.value.serde" : 'org.apache.kafka.common.serialization.Serdes$StringSerde'
@@ -40,8 +31,13 @@ spring :
     enabled : true
 
 ujar :
+  build :
+    description : '@project.description@'
+    relative-path : ''
+    version : '@project.version@'
   kafka :
-    create-topics-on-startup : true
+    admin :
+      create-topics : true
     topics :
       for-input :
         name : test-input-topic

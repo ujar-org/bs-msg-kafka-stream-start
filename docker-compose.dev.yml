@@ -3,7 +3,7 @@ version : '3.8'
 services :
   zookeeper :
     image : docker.io/bitnami/zookeeper:3.8
-    container_name : bs-msg-kafka-dev-stream-start-zookeeper
+    container_name : quickstart-kafka-dev-stream-start-zookeeper
     restart : unless-stopped
     environment :
       ZOOKEEPER_CLIENT_PORT : 2181
@@ -11,7 +11,7 @@ services :
       ALLOW_ANONYMOUS_LOGIN : yes
   kafka :
     image : docker.io/bitnami/kafka:3.4
-    container_name : bs-msg-kafka-dev-stream-start-broker
+    container_name : quickstart-kafka-dev-stream-start-broker
     restart : unless-stopped
     depends_on :
       - zookeeper
@@ -25,24 +25,24 @@ services :
       ALLOW_PLAINTEXT_LISTENER : yes
 
   prometheus :
-    container_name : bs-msg-kafka-dev-stream-start-prometheus
-    image : prom/prometheus:v2.37.1
+    container_name : quickstart-kafka-dev-stream-start-prometheus
+    image : prom/prometheus:v2.42.0
     volumes :
       - ./src/main/docker/prometheus/:/etc/prometheus/
     command :
       - '--config.file=/etc/prometheus/prometheus.yml'
-    # On MacOS, remove next line and replace localhost by host.docker.internal in docker/prometheus/prometheus.yml and
+    # On MacOS, remove next line and replace localhost by host.docker.internal in src/main/docker/prometheus/prometheus.yml and
     # docker/grafana/provisioning/datasources/datasource.yml
     network_mode : 'host' # to test locally running service
   grafana :
-    container_name : bs-msg-kafka-dev-stream-start-grafana
-    image : grafana/grafana:8.5.13
+    container_name : quickstart-kafka-dev-stream-start-grafana
+    image : grafana/grafana:9.3.6
     volumes :
       - ./src/main/docker/grafana/provisioning/:/etc/grafana/provisioning/
     environment :
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_INSTALL_PLUGINS=grafana-piechart-panel
-    # On MacOS, remove next line and replace localhost by host.docker.internal in docker/prometheus/prometheus.yml and
+    # On MacOS, remove next line and replace localhost by host.docker.internal in src/main/docker/prometheus/prometheus.yml and
     # docker/grafana/provisioning/datasources/datasource.yml
     network_mode : 'host' # to test locally running service

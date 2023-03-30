@@ -8,9 +8,9 @@ Minimal Spring Boot based sample of Kafka Streams app.
 - Clone source code to the local machine:
 
 ```
-git clone https://github.com/ujar-org/bs-msg-kafka-stream-start.git
+git clone https://github.com/ujar-org/quickstart-kafka-stream-initialize.git
 
-cd bs-msg-kafka-stream-start
+cd quickstart-kafka-stream-initialize
 ```
 
 - Install Docker [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/)
@@ -29,13 +29,19 @@ using [Maven](https://spring.io/guides/gs/maven/). You can build a jar files and
 - Create jar packages:
 
 ```
-mvn package
+./mvnw package
 ```
 
-- Run **bs-msg-kafka-stream-start** app:
+- Run **quickstart-kafka-stream-initialize** app:
 
 ```
 java -jar target/*.jar
+```
+
+You might also want to use Maven's `spring-boot:run` goal - applications run in an exploded form, as they do in your IDE:
+
+```
+./mvnw spring-boot:run -Dspring-boot.run.profiles=local -P dev
 ```
 
 ## Code conventions
@@ -55,3 +61,16 @@ This project has standard JUnit tests. To run them execute this command:
 ```
 mvn test
 ```
+
+## Versioning
+
+Project uses a three-segment [CalVer](https://calver.org/) scheme, with a short year in the major version slot, short month in the minor version slot, and micro/patch version in the third
+and final slot.
+
+```
+YY.MM.MICRO
+```
+
+1. **YY** - short year - 6, 16, 106
+1. **MM** - short month - 1, 2 ... 11, 12
+1. **MICRO** -  "patch" segment

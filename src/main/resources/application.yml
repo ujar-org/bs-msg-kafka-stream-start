@@ -1,10 +1,5 @@
-build :
-  description : '@project.description@'
-  relative-path : ${SWAGGER_UI_RELATIVE_PATH:}
-  version : '@project.version@'
-
 git :
-  commit : '@git.commit.id@'
+  commit : '@git.commit.id.abbrev@'
   build_time : '@git.build.time@'
 
 info :
@@ -17,7 +12,7 @@ info :
 
 spring :
   application :
-    name : bs-msg-kafka-stream-start
+    name : quickstart-kafka-stream-initialize
   jackson :
     default-property-inclusion : NON_NULL
   lifecycle :
@@ -27,11 +22,8 @@ spring :
       bootstrap-servers : ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
       value-serializer : org.apache.kafka.common.serialization.StringSerializer
       properties :
-        basic.auth.credentials.source : SASL_INHERIT
         security.protocol : ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
         sasl.mechanism : SCRAM-SHA-512
-        sasl.jaas.config : "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"${KAFKA_USERNAME}\" password=\"${KAFKA_PASSWORD}\";"
-        spring.json.add.type.headers : false
     consumer :
       bootstrap-servers : ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
       value-deserializer : org.apache.kafka.common.serialization.StringDeserializer
@@ -45,9 +37,8 @@ spring :
         bootstrap.servers : ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
         security.protocol : ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
         sasl.mechanism : SCRAM-SHA-512
-        sasl.jaas.config : "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"${KAFKA_USERNAME}\" password=\"${KAFKA_PASSWORD}\";"
     streams :
-      application-id : bsmsgkafkastreamstart
+      application-id : bsmsgkafkastreaminitialize
       properties :
         "default.key.serde" : 'org.apache.kafka.common.serialization.Serdes$StringSerde'
         "default.value.serde" : 'org.apache.kafka.common.serialization.Serdes$StringSerde'
@@ -65,6 +56,9 @@ management :
       enabled : true
     readinessstate :
       enabled : true
+    kafka :
+      enabled : true
+      response-timeout : 500
   info :
     env :
       enabled : true
@@ -74,7 +68,7 @@ management :
     enabled-by-default : false
     web :
       exposure :
-        include : health, info
+        include : health, prometheus, info
   endpoint :
     health :
       enabled : true
@@ -83,14 +77,21 @@ management :
         enabled : true
     info :
       enabled : true
+    prometheus :
+      enabled : true
 
 server :
   port : ${SERVER_PORT:8080}
   shutdown : graceful
 
 ujar :
+  build :
+    description : '@project.description@'
+    relative-path : ${SWAGGER_UI_RELATIVE_PATH:}
+    version : '@project.version@'
   kafka :
-    create-topics-on-startup : ${KAFKA_CREATE_TOPICS_ON_STARTUP:true}
+    admin :
+      create-topics : ${KAFKA_ADMIN_CREATES_TOPICS:true}
     topics :
       for-input :
         name : ${KAFKA_TOPIC_FOR_INPUT:input-topic}

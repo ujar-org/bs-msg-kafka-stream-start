@@ -1,4 +1,4 @@
-package org.ujar.bs.msg.kafka.stream.start;
+package org.ujar.kafkastreaminitialize;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
