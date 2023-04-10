@@ -1,6 +1,6 @@
 # Kafka Streams starter app
 
-Minimal Spring Boot based sample of Kafka Streams app.
+Minimal Spring Boot based sample Kafka Streams app.
 
 ### Pre-Requisites to run this example locally
 

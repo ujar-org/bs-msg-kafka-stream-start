@@ -4,6 +4,7 @@ ${AnsiColor.GREEN} | | | |  _   | |  / _` | | '__|
 ${AnsiColor.GREEN} | |_| | | |__| | | (_| | | |   
 ${AnsiColor.GREEN}  \__,_|  \____/   \__,_| |_|   
 ${AnsiColor.BLUE} ===============================
-${AnsiColor.BLUE}  Sample of Kafka Streams app
+${AnsiColor.BLUE}  Sample Kafka Streams app
+${AnsiColor.BLUE}  Running Spring Boot ${spring-boot.version}
 ${AnsiColor.BLUE} ===============================
-${AnsiColor.BLACK}
+${AnsiColor.DEFAULT}
