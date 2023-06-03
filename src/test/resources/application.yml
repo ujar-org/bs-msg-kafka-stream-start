@@ -33,7 +33,7 @@ spring :
 ujar :
   build :
     description : '@project.description@'
-    relative-path : ''
+    relative-path : '/'
     version : '@project.version@'
   kafka :
     admin :
