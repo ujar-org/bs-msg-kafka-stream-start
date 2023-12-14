@@ -1,4 +1,4 @@
-package org.ujar.kafkastreaminitialize;
+package dev.knowhowto.kafkastreaminitialize;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.Serdes;
@@ -17,8 +17,8 @@ public class InputToOutputStream {
   private final String kafkaInputTopic;
   private final String kafkaOutputTopic;
 
-  public InputToOutputStream(@Value("${ujar.kafka.topics.for-input.name}") String kafkaInputTopic,
-                             @Value("${ujar.kafka.topics.for-output.name}") String kafkaOutputTopic) {
+  public InputToOutputStream(@Value("${iqkv.kafka.topics.for-input.name}") String kafkaInputTopic,
+                             @Value("${iqkv.kafka.topics.for-output.name}") String kafkaOutputTopic) {
     this.kafkaInputTopic = kafkaInputTopic;
     this.kafkaOutputTopic = kafkaOutputTopic;
   }

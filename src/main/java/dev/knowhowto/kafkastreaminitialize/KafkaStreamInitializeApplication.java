@@ -1,4 +1,4 @@
-package org.ujar.kafkastreaminitialize;
+package dev.knowhowto.kafkastreaminitialize;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

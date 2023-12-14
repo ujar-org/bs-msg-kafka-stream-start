@@ -1,4 +1,4 @@
-package org.ujar.kafkastreaminitialize;
+package dev.knowhowto.kafkastreaminitialize;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -18,7 +18,7 @@ public class Producer {
   private final AtomicInteger counter = new AtomicInteger();
 
   public Producer(KafkaTemplate<String, String> template,
-                  @Value("${ujar.kafka.topics.for-input.name}") String inputTopic) {
+                  @Value("${iqkv.kafka.topics.for-input.name}") String inputTopic) {
     this.template = template;
     this.inputTopic = inputTopic;
   }

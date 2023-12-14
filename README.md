@@ -8,7 +8,7 @@ Minimal Spring Boot based sample Kafka Streams app.
 - Clone source code to the local machine:
 
 ```
-git clone https://github.com/uJarOrg/quickstart-kafka-stream-initialize.git
+git clone https://github.com/KnowHowSpringBoot/quickstart-kafka-stream-initialize.git
 
 cd quickstart-kafka-stream-initialize
 ```
