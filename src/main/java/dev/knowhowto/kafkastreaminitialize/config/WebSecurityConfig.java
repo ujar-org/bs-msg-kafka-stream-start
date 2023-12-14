@@ -1,4 +1,4 @@
-package org.ujar.kafkastreaminitialize.config;
+package dev.knowhowto.kafkastreaminitialize.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

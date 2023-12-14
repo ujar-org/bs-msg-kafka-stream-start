@@ -30,7 +30,7 @@ spring :
   jmx :
     enabled : true
 
-ujar :
+iqkv :
   build :
     description : '@project.description@'
     relative-path : '/'

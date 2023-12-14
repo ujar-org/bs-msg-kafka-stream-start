@@ -1,4 +1,4 @@
-# This configuration is intended for development purpose
+# This configuration is intended for dev purpose
 version : '3.8'
 services :
   zookeeper :
@@ -19,7 +19,7 @@ services :
       - "9092:9092"
     environment :
       KAFKA_BROKER_ID : 1
-      KAFKA_ENABLE_KRAFT: "no"
+      KAFKA_ENABLE_KRAFT : "no"
       KAFKA_CFG_LISTENERS : PLAINTEXT://:9092
       KAFKA_CFG_ADVERTISED_LISTENERS : PLAINTEXT://127.0.0.1:9092
       KAFKA_CFG_ZOOKEEPER_CONNECT : zookeeper:2181
@@ -41,7 +41,7 @@ services :
     volumes :
       - ./src/main/docker/grafana/provisioning/:/etc/grafana/provisioning/
     environment :
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_PASSWORD=changeme
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_INSTALL_PLUGINS=grafana-piechart-panel
     # On MacOS, remove next line and replace localhost by host.docker.internal in src/main/docker/prometheus/prometheus.yml and

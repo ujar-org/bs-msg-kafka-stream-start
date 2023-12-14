@@ -1,4 +1,4 @@
-package org.ujar.kafkastreaminitialize;
+package dev.knowhowto.kafkastreaminitialize;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,17 +35,17 @@ import org.springframework.test.annotation.DirtiesContext;
         "port=9092",
         "log.dir=target/embbdedkafka/InputToOutputStreamTest"
     },
-    topics = {"${ujar.kafka.topics.for-input.name}",
-        "${ujar.kafka.topics.for-output.name}"})
+    topics = {"${iqkv.kafka.topics.for-input.name}",
+        "${iqkv.kafka.topics.for-output.name}"})
 @EnableKafkaStreams
 @DirtiesContext
 class InputToOutputStreamTest {
 
   @Autowired
   EmbeddedKafkaBroker embeddedKafkaBroker;
-  @Value("${ujar.kafka.topics.for-input.name}")
+  @Value("${iqkv.kafka.topics.for-input.name}")
   private String inputTopic;
-  @Value("${ujar.kafka.topics.for-output.name}")
+  @Value("${iqkv.kafka.topics.for-output.name}")
   private String outputTopic;
 
   @Test

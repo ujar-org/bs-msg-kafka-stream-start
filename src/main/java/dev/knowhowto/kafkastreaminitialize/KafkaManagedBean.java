@@ -1,11 +1,11 @@
-package org.ujar.kafkastreaminitialize;
+package dev.knowhowto.kafkastreaminitialize;
 
 import org.springframework.jmx.export.annotation.ManagedAttribute;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.kafka.config.StreamsBuilderFactoryBean;
 import org.springframework.stereotype.Component;
 
-@ManagedResource(objectName = "org.ujar.kafka.streams.start:name=KafkaManagedBean")
+@ManagedResource(objectName = "dev.iqkv.kafka.streams.start:name=KafkaManagedBean")
 @Component
 public class KafkaManagedBean {
   private final StreamsBuilderFactoryBean streamsBuilderFactoryBean;

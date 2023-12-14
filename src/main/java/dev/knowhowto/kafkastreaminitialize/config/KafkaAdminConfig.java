@@ -1,20 +1,20 @@
-package org.ujar.kafkastreaminitialize.config;
+package dev.knowhowto.kafkastreaminitialize.config;
 
-import static org.ujar.kafkastreaminitialize.config.Constants.TOPIC_DEFINITION_FOR_INPUT;
-import static org.ujar.kafkastreaminitialize.config.Constants.TOPIC_DEFINITION_FOR_OUTPUT;
+import static dev.knowhowto.kafkastreaminitialize.config.Constants.TOPIC_DEFINITION_FOR_INPUT;
+import static dev.knowhowto.kafkastreaminitialize.config.Constants.TOPIC_DEFINITION_FOR_OUTPUT;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.config.TopicConfig;
+import org.iqkv.boot.kafka.config.KafkaTopicDefinitionProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
-import org.ujar.boot.kafka.config.KafkaTopicDefinitionProperties;
 
 @Configuration
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "ujar.kafka.admin.create-topics", havingValue = "true")
+@ConditionalOnProperty(value = "iqkv.kafka.admin.create-topics", havingValue = "true")
 class KafkaAdminConfig {
   private final KafkaTopicDefinitionProperties topicDefinitions;
 
