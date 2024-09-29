@@ -6,7 +6,7 @@ import static dev.knowhowto.kafkastreaminitialize.config.Constants.TOPIC_DEFINIT
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.config.TopicConfig;
-import org.iqkv.boot.kafka.config.KafkaTopicDefinitionProperties;
+import com.iqkv.boot.kafka.config.KafkaTopicDefinitionProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
