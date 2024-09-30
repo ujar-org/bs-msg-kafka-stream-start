@@ -14,11 +14,11 @@ cd quickstart-kafka-stream-initialize
 ```
 
 - Install Docker [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/)
-- Add new version of docker-compose [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/)
-- Spin-up single instance of Kafka broker, zookeeper by running command:
+- Add new version of Docker Compose [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/)
+- Spin-up single instance of Kafka broker, ZooKeeper by running command:
 
 ```
-docker-compose -f docker-compose.dev.yml up -d
+docker compose -f compose.yaml up -d
 ```
 
 ### Running locally
