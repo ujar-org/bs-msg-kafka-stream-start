@@ -1,9 +1,9 @@
 # This configuration is intended for dev purpose
-version : '3.8'
+name : dev-quickstart-kafka-stream-initialize
 services :
   zookeeper :
     image : docker.io/bitnami/zookeeper:3.9.2
-    container_name : quickstart-kafka-dev-stream-start-zookeeper
+    container_name : dev-quickstart-kafka-stream-initialize-zookeeper
     restart : unless-stopped
     environment :
       ZOOKEEPER_CLIENT_PORT : 2181
@@ -11,7 +11,7 @@ services :
       ALLOW_ANONYMOUS_LOGIN : "yes"
   kafka :
     image : docker.io/bitnami/kafka:3.6.2
-    container_name : quickstart-kafka-dev-stream-start-broker
+    container_name : dev-quickstart-kafka-stream-initialize-broker
     restart : unless-stopped
     depends_on :
       - zookeeper
@@ -26,7 +26,7 @@ services :
       ALLOW_PLAINTEXT_LISTENER : "yes"
 
   prometheus :
-    container_name : quickstart-kafka-dev-stream-start-prometheus
+    container_name : dev-quickstart-kafka-stream-initialize-prometheus
     image : prom/prometheus:v2.54.1
     volumes :
       - ./src/main/docker/prometheus/:/etc/prometheus/
@@ -36,7 +36,7 @@ services :
     # docker/grafana/provisioning/datasources/datasource.yml
     network_mode : 'host' # to test locally running service
   grafana :
-    container_name : quickstart-kafka-dev-stream-start-grafana
+    container_name : dev-quickstart-kafka-stream-initialize-grafana
     image : grafana/grafana:11.2.0
     volumes :
       - ./src/main/docker/grafana/provisioning/:/etc/grafana/provisioning/
