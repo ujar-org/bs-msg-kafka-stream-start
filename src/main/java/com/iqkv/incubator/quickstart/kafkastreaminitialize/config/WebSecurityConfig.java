@@ -1,4 +1,4 @@
-package dev.knowhowto.kafkastreaminitialize.config;
+package com.iqkv.incubator.quickstart.kafkastreaminitialize.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

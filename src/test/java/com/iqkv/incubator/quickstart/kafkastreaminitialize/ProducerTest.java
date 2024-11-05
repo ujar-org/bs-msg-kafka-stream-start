@@ -1,4 +1,4 @@
-package dev.knowhowto.kafkastreaminitialize;
+package com.iqkv.incubator.quickstart.kafkastreaminitialize;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

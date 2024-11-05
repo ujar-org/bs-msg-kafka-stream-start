@@ -1,4 +1,4 @@
-package dev.knowhowto.kafkastreaminitialize;
+package com.iqkv.incubator.quickstart.kafkastreaminitialize;
 
 import org.springframework.jmx.export.annotation.ManagedAttribute;
 import org.springframework.jmx.export.annotation.ManagedResource;

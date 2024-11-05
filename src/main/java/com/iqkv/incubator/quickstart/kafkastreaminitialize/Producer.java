@@ -1,4 +1,4 @@
-package dev.knowhowto.kafkastreaminitialize;
+package com.iqkv.incubator.quickstart.kafkastreaminitialize;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

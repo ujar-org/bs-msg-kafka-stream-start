@@ -1,4 +1,4 @@
-package dev.knowhowto.kafkastreaminitialize;
+package com.iqkv.incubator.quickstart.kafkastreaminitialize;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
