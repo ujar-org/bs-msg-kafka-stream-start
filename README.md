@@ -10,7 +10,7 @@ Pre-Requisites to run this example locally
 - Clone source code to the local machine:
 
 ```
-git clone https://github.com/KnowHowSpringBoot/quickstart-kafka-stream-initialize.git
+git clone https://github.com/IQKV/quickstart-kafka-stream-initialize.git
 
 cd quickstart-kafka-stream-initialize
 ```
